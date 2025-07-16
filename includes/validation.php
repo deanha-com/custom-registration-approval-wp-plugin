@@ -12,7 +12,7 @@ function cra_handle_registration_form()
             wp_verify_nonce($_POST['cra_nonce'], 'cra_multistep_register'))
     ) {
         $errors[] = 'Security check failed.';
-        return $errors;
+        return ['errors' => $errors];
     }
 
     // Required fields
@@ -59,17 +59,18 @@ function cra_handle_registration_form()
     }
 
     // If errors, return now
-    if (!empty($errors)) return $errors;
+    if (!empty($errors)) {
+        return ['errors' => $errors];
+    }
 
-    // ✅ Registration: create new user
+    // Registration: create new user
     $user_id = wp_create_user($username, $_POST['cra_password'], $email);
     if (is_wp_error($user_id)) {
         $errors[] = "User registration failed.";
-        return $errors;
+        return ['errors' => $errors];
     }
 
-
-    // ✅ Save user meta
+    // Save user meta
     update_user_meta($user_id, 'first_name', sanitize_text_field($_POST['cra_first_name']));
     update_user_meta($user_id, 'last_name', sanitize_text_field($_POST['cra_last_name']));
     update_user_meta($user_id, 'company_name', $company_name);
@@ -78,35 +79,32 @@ function cra_handle_registration_form()
     update_user_meta($user_id, 'vat_status', $vat_status);
     update_user_meta($user_id, 'role_in_company', sanitize_text_field($_POST['cra_company_role']));
 
-    // ✅ Conditional auto-approval
+    // Conditional approval status and role assignment
     if ($company_valid) {
         update_user_meta($user_id, 'cra_approval_status', 'approved');
         $user = new WP_User($user_id);
         $user->set_role('wholesale_customer');
+        $approval_status = 'approved';
     } else {
         update_user_meta($user_id, 'cra_approval_status', 'pending');
         $user = new WP_User($user_id);
         $user->set_role('pending');
+        $approval_status = 'pending';
     }
 
-    // ✅ Optionally log user in
+    // Optionally log user in
     wp_set_current_user($user_id);
     wp_set_auth_cookie($user_id);
 
-    // ✅ Redirect to success page
-    wp_redirect('http://urbanmerchants.local/wholesale/registration-success/');
-    exit;
+    // Return structured success data (no redirect)
+    return [
+        'success' => true,
+        'approval_status' => $approval_status,
+        'user_id' => $user_id,
+    ];
 }
 
 
-
-/**
- * Validates company via API.
- * Now checks:
- *   - Matching company_number
- *   - Matching or partially matching company_name (case/space insensitive)
- *   - company_status === 'Active'
- */
 function cra_validate_company_number_api($company_number, $user_company_name = '')
 {
     if (empty($company_number)) return false;
@@ -124,7 +122,6 @@ function cra_validate_company_number_api($company_number, $user_company_name = '
 
     $body = json_decode(wp_remote_retrieve_body($response), true);
 
-    // ✅ Check if response includes required data
     if (
         empty($body['company_number']) ||
         strtolower($body['company_number']) !== strtolower($company_number)
@@ -139,22 +136,17 @@ function cra_validate_company_number_api($company_number, $user_company_name = '
         return false;
     }
 
-    // Normalize names for comparison
     $api_name   = strtolower(trim(preg_replace('/\s+/', ' ', $body['company_name'] ?? '')));
     $input_name = strtolower(trim(preg_replace('/\s+/', ' ', $user_company_name)));
 
-    // ✅ Allow partial match (case-insensitive, space-insensitive)
     if (empty($input_name) || strpos($api_name, $input_name) === false) {
         return false;
     }
 
-    return true; // ✅ Passed all checks
+    return true;
 }
 
 
-/**
- * Optional VAT API validation
- */
 function cra_check_vat_api($vat_number)
 {
     $endpoint = 'https://vatapi-kohl.vercel.app/check-vat';

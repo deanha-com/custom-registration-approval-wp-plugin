@@ -1,15 +1,53 @@
-#cra-register-form { max-width: 400px; margin: 2em auto; }
-#cra-register-form input, #cra-register-form button {
-    display: block;
-    width: 100%;
-    margin-bottom: 1em;
-    padding: 0.5em;
+#cra-register-form {
+  max-width: 70%;
+  /* margin: 2em auto; */
+}
+#cra-register-form input,
+#cra-register-form button {
+  display: block;
+  width: 100%;
+  margin-bottom: 1em;
+  padding: 0.5em;
 }
 .cra-errors {
-    color: #fff;
-    background: #b30000;
-    padding: 1em;
-    margin-bottom: 1em;
-    border-radius: 3px;
-    list-style: disc inside;
+  color: #fff;
+  background: #b30000;
+  padding: 1em;
+  margin-bottom: 1em;
+  border-radius: 3px;
+  list-style: disc inside;
+}
+
+.cra_submit_btn {
+  min-width: 20%;
+  max-width: 140px;
+  margin-left: auto;
+  background: #eda63d;
+  color: white;
+}
+
+/* Spinner example */
+button[disabled] {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+button[disabled] .spinner {
+  display: inline-block;
+}
+.spinner {
+  display: none;
+  margin-left: 0.5rem;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #fff;
+  border-top: 2px solid #888;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
