@@ -1,0 +1,47 @@
+#cra-progressbar {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    counter-reset: step;
+}
+#cra-progressbar li {
+    list-style: none;
+    width: 100%;
+    position: relative;
+    text-align: center;
+    font-weight: bold;
+}
+#cra-progressbar li::before {
+    counter-increment: step;
+    content: counter(step);
+    width: 25px;
+    height: 25px;
+    border: 2px solid #ccc;
+    display: block;
+    margin: 0 auto 5px;
+    line-height: 23px;
+    border-radius: 50%;
+    background: white;
+}
+#cra-progressbar li.active::before {
+    background: #2ea7e0;
+    border-color: #2ea7e0;
+    color: white;
+}
+#cra-multistep-form fieldset {
+    display: none;
+    border: none;
+}
+#cra-multistep-form fieldset.active { display: block; }
+#cra-multistep-form input, #cra-multistep-form button {
+    display: block;
+    width: 100%;
+    margin-bottom: 15px;
+    padding: 10px;
+}
+#cra-multistep-form .action-button {
+    background: #2ea7e0;
+    color: white;
+    border: none;
+    cursor: pointer;
+}

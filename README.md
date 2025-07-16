@@ -1,2 +1,3 @@
-# custom-registration-approval-wp-plugin
-custom-registration-approval
+# custom-registration-approval
+
+Vibe coded using Perplexity Pro, this plugin is made for Urban Merchants Wholesale Portal
