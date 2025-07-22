@@ -132,12 +132,14 @@ add_action('woocommerce_edit_account_form', function () {
         <h3>Company Information</h3>
         <p>
             <label>Company Name<br>
-                <input style="width: 100%;" type="text" name="company_name" value="<?php echo esc_attr(get_user_meta($user_id, 'company_name', true)); ?>" />
+                <input style="width: 100%;" type="text" name="company_name" value="<?php echo esc_attr(get_user_meta($user_id, 'company_name', true)); ?>" disabled
+                    title="To update your company name, please email us from your account email to request a change." />
             </label>
         </p>
         <p>
             <label>Company Number<br>
-                <input style="width: 100%;" type="text" name="company_number" value="<?php echo esc_attr(get_user_meta($user_id, 'company_number', true)); ?>" />
+                <input style="width: 100%;" type="text" name="company_number" value="<?php echo esc_attr(get_user_meta($user_id, 'company_number', true)); ?>" disabled
+                    title="To update your company number, please email us from your account email to request a change." />
             </label>
         </p>
         <p>

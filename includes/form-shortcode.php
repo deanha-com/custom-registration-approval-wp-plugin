@@ -52,7 +52,12 @@ function cra_render_registration_form()
                 value="<?php echo isset($_POST['cra_first_name']) ? esc_attr($_POST['cra_first_name']) : ''; ?>">
             <input type="text" name="cra_last_name" required placeholder="Last Name"
                 value="<?php echo isset($_POST['cra_last_name']) ? esc_attr($_POST['cra_last_name']) : ''; ?>">
-            <input type="text" name="cra_username" required placeholder="Desired Username"
+            <input type="text"
+                name="cra_username"
+                required
+                placeholder="Desired Username"
+                pattern="^[A-Za-z0-9._]+$"
+                title="Username may contain only letters, numbers, dot (.), and underscore (_)"
                 value="<?php echo isset($_POST['cra_username']) ? esc_attr($_POST['cra_username']) : ''; ?>">
             <input type="text" name="cra_company" required placeholder="Company Name"
                 value="<?php echo isset($_POST['cra_company']) ? esc_attr($_POST['cra_company']) : ''; ?>">
@@ -69,6 +74,16 @@ function cra_render_registration_form()
             <?php wp_nonce_field('cra_register_form', 'cra_nonce'); ?>
             <button class="cra_submit_btn" type="submit" name="cra_submit" value="1">Register</button>
         </form>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var usernameInput = document.querySelector('#cra-register-form input[name="cra_username"]');
+                if (usernameInput) {
+                    usernameInput.addEventListener('input', function() {
+                        this.value = this.value.replace(/[^A-Za-z0-9._]/g, '');
+                    });
+                }
+            });
+        </script>
 
 
 

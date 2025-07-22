@@ -91,7 +91,7 @@ function cra_approve_user($user_id)
 {
     update_user_meta($user_id, 'cra_approval_status', 'approved');
     $user = new WP_User($user_id);
-    $user->set_role('wholesale_customer');
+    $user->set_role('customer');
 }
 function cra_reject_user($user_id)
 {

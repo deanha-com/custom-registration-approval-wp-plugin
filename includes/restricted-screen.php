@@ -10,7 +10,6 @@ function cra_restricted_screen_shortcode()
     <style>
         .cra-split-screen {
             display: flex;
-            max-width: 960px;
             margin: 50px auto;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             border-radius: 10px;

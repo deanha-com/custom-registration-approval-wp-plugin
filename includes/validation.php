@@ -40,6 +40,9 @@ function cra_handle_registration_form()
 
     // Username/email checks
     $username = sanitize_user($_POST['cra_username']);
+    if (!preg_match('/^[A-Za-z0-9._]+$/', $username)) {
+        $errors[] = "Username may only contain letters, numbers, dot (.) and underscore (_).";
+    }
     $email = sanitize_email($_POST['cra_email']);
 
     if (username_exists($username)) $errors[] = "Username already exists.";
@@ -83,7 +86,7 @@ function cra_handle_registration_form()
     if ($company_valid) {
         update_user_meta($user_id, 'cra_approval_status', 'approved');
         $user = new WP_User($user_id);
-        $user->set_role('wholesale_customer');
+        $user->set_role('customer');
         $approval_status = 'approved';
     } else {
         update_user_meta($user_id, 'cra_approval_status', 'pending');
