@@ -73,3 +73,9 @@ add_action('manage_users_custom_column', function ($value, $column_name, $user_i
             return $value;
     }
 }, 10, 3);
+
+// 4. Flush rewrite rules on plugin activation only (not on every load!)
+register_activation_hook(__FILE__, function () {
+    add_rewrite_endpoint('company-details', EP_PAGES);
+    flush_rewrite_rules();
+});

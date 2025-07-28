@@ -1,5 +1,6 @@
 <?php
 if (!defined('ABSPATH')) exit;
+ob_start();
 // Add custom fields to user profile
 add_action('show_user_profile', 'cra_custom_user_profile_fields');
 add_action('edit_user_profile', 'cra_custom_user_profile_fields');
@@ -32,10 +33,6 @@ function cra_custom_user_profile_fields($user)
                 <input type="text" name="position_in_company" id="position_in_company" value="<?php echo esc_attr(get_user_meta($user->ID, 'position_in_company', true)); ?>" class="regular-text" />
             </td>
         </tr>
-
-
-
-
         <tr>
             <th><label for="phone">Phone</label></th>
             <td>
@@ -78,9 +75,7 @@ function cra_save_custom_user_profile_fields($user_id)
     update_user_meta($user_id, 'vat_number', sanitize_text_field($_POST['vat_number']));
     update_user_meta($user_id, 'position_in_company', sanitize_text_field($_POST['position_in_company']));
 }
-
 ?>
-
 
 <?php
 // Show meta data on My Account (WooCommerce-compatible)
@@ -169,7 +164,7 @@ add_action('woocommerce_account_company-details_endpoint', function () {
                         <input style="width: 100%;" type="text" name="cra_phone" value="<?php echo $phone; ?>" />
                     </label>
                 </p>
-            
+
                 <p>
                     <label>Website<br>
                         <input style="width: 100%;" type="text" name="cra_website" value="<?php echo $website; ?>" />
@@ -177,7 +172,8 @@ add_action('woocommerce_account_company-details_endpoint', function () {
                 </p>
                 <!-- <p>
                     <label>Comments/Notes<br>
-                        <textarea style="width: 100%;" name="cra_comments"><?php echo $comments; ?></textarea>
+                        <textarea style="width: 100%;" name="cra_comments"><?php //echo $comments; 
+                                                                            ?></textarea>
                     </label>
                 </p> -->
             </div>
@@ -190,7 +186,7 @@ add_action('woocommerce_account_company-details_endpoint', function () {
 });
 
 
-add_action('template_redirect', function() {
+add_action('template_redirect', function () {
     if (
         is_account_page() &&
         isset($_POST['cra_company_details_submit']) &&
@@ -214,9 +210,4 @@ add_action('template_redirect', function() {
     }
 });
 
-
-// 4. Flush rewrite rules on plugin activation only (not on every load!)
-register_activation_hook(__FILE__, function () {
-    add_rewrite_endpoint('company-details', EP_PAGES);
-    flush_rewrite_rules();
-});
+ob_end_clean();

@@ -1,5 +1,4 @@
 <?php
-
 if (!defined('ABSPATH')) exit;
 
 function cra_render_registration_form()
