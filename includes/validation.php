@@ -22,10 +22,13 @@ function cra_handle_registration_form()
         'cra_username' => 'Username',
         'cra_company' => 'Company Name',
         'cra_company_number' => 'Company Number',
-        'cra_company_role' => 'Role in the Company',
+        'cra_position_in_company' => 'Position in the Company',
         'cra_email' => 'Email',
         'cra_password' => 'Password',
-        'cra_password_confirm' => 'Password Confirmation'
+        'cra_password_confirm' => 'Password Confirmation',
+        'cra_phone' => 'Phone Number',
+        'cra_company_address' => 'Company Address',
+        'cra_delivery_address' => 'Goods Delivery Address',
     ];
     foreach ($required as $key => $label) {
         if (empty($_POST[$key])) $errors[] = "$label is required.";
@@ -43,6 +46,10 @@ function cra_handle_registration_form()
     if (!preg_match('/^[A-Za-z0-9._]+$/', $username)) {
         $errors[] = "Username may only contain letters, numbers, dot (.) and underscore (_).";
     }
+    // New: Validate length between 4 and 30 characters
+    if (strlen($username) < 4 || strlen($username) > 30) {
+        $errors[] = "Username must be between 4 and 30 characters in length.";
+    }
     $email = sanitize_email($_POST['cra_email']);
 
     if (username_exists($username)) $errors[] = "Username already exists.";
@@ -52,13 +59,19 @@ function cra_handle_registration_form()
     // Prepare company data
     $company_number = sanitize_text_field($_POST['cra_company_number']);
     $company_name   = sanitize_text_field($_POST['cra_company']);
+
+    // Fetch raw API response for notification email
+    $company_api_response = cra_company_number_api_result($company_number);
     $company_valid  = cra_validate_company_number_api($company_number, $company_name);
 
     // Optionally validate VAT for meta
     $vat_number = !empty($_POST['cra_vat']) ? sanitize_text_field($_POST['cra_vat']) : '';
     $vat_status = '';
+    $vat_api_data = '';
+    $vat_status = '';
     if (!empty($vat_number)) {
-        $vat_status = cra_check_vat_api($vat_number);
+        $vat_api_data = cra_check_vat_api($vat_number);
+        $vat_status = is_array($vat_api_data) && isset($vat_api_data['vat_status']) ? $vat_api_data['vat_status'] : '';
     }
 
     // If errors, return now
@@ -80,7 +93,12 @@ function cra_handle_registration_form()
     update_user_meta($user_id, 'company_number', $company_number);
     update_user_meta($user_id, 'vat_number', $vat_number);
     update_user_meta($user_id, 'vat_status', $vat_status);
-    update_user_meta($user_id, 'role_in_company', sanitize_text_field($_POST['cra_company_role']));
+    update_user_meta($user_id, 'position_in_company', sanitize_text_field($_POST['cra_position_in_company']));
+    update_user_meta($user_id, 'phone', sanitize_text_field($_POST['cra_phone']));
+    update_user_meta($user_id, 'company_address', sanitize_text_field($_POST['cra_company_address']));
+    update_user_meta($user_id, 'delivery_address', sanitize_text_field($_POST['cra_delivery_address']));
+    update_user_meta($user_id, 'website', sanitize_text_field($_POST['cra_website']));
+    update_user_meta($user_id, 'comments', sanitize_textarea_field($_POST['cra_comments']));
 
     // Conditional approval status and role assignment
     if ($company_valid) {
@@ -99,6 +117,16 @@ function cra_handle_registration_form()
     wp_set_current_user($user_id);
     wp_set_auth_cookie($user_id);
 
+    // Send registration notification (AFTER all meta is saved)
+    if (function_exists('cra_send_new_registration_notification')) {
+        cra_send_new_registration_notification($user_id, [
+            'company_api'    => $company_api_response,
+            'vat_api'        => !empty($vat_api_data) ? $vat_api_data : null,
+            'api_status'     => $company_valid ? 'Valid/Active' : 'Invalid/Not Approved',
+            'approval_status' => $approval_status, // pass approval status here
+        ]);
+    }
+
     // Return structured success data (no redirect)
     return [
         'success' => true,
@@ -108,6 +136,25 @@ function cra_handle_registration_form()
 }
 
 
+// Returns raw company API response for notification
+function cra_company_number_api_result($company_number)
+{
+    if (empty($company_number)) return [];
+
+    $endpoint = 'https://vatapi-kohl.vercel.app/check-company';
+    $response = wp_remote_post($endpoint, [
+        'headers' => ['Content-Type' => 'application/json'],
+        'body'    => json_encode(['company_number' => $company_number]),
+        'timeout' => 10,
+    ]);
+    if (is_wp_error($response) || wp_remote_retrieve_response_code($response) !== 200) return [];
+
+    $body = json_decode(wp_remote_retrieve_body($response), true);
+    return is_array($body) ? $body : [];
+}
+
+
+// Validation of company number and name with API
 function cra_validate_company_number_api($company_number, $user_company_name = '')
 {
     if (empty($company_number)) return false;
@@ -150,6 +197,26 @@ function cra_validate_company_number_api($company_number, $user_company_name = '
 }
 
 
+// VAT validation API check
+// function cra_check_vat_api($vat_number)
+// {
+//     $endpoint = 'https://vatapi-kohl.vercel.app/check-vat';
+//     $response = wp_remote_post($endpoint, [
+//         'headers' => ['Content-Type' => 'application/json'],
+//         'body'    => json_encode(['vat_number' => $vat_number]),
+//         'timeout' => 10,
+//     ]);
+
+//     if (is_wp_error($response) || wp_remote_retrieve_response_code($response) !== 200) {
+//         return '';
+//     }
+
+//     $body = json_decode(wp_remote_retrieve_body($response), true);
+//     return isset($body['vat_status']) ? $body['vat_status'] : '';
+// }
+
+// In validation.php
+
 function cra_check_vat_api($vat_number)
 {
     $endpoint = 'https://vatapi-kohl.vercel.app/check-vat';
@@ -164,5 +231,7 @@ function cra_check_vat_api($vat_number)
     }
 
     $body = json_decode(wp_remote_retrieve_body($response), true);
-    return isset($body['vat_status']) ? $body['vat_status'] : '';
+
+    // Save both status and raw response
+    return $body; // Instead of just $body['vat_status']
 }
