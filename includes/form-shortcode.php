@@ -39,7 +39,7 @@ function cra_render_registration_form()
         }
     } else {
         if (!empty($errors)) {
-            echo '<ul class="cra-errors" style="color:red; padding-left: 20px;">';
+            echo '<ul class="cra-errors" style="padding-left: 20px;">';
             foreach ($errors as $err) {
                 echo '<li>' . esc_html($err) . '</li>';
             }
@@ -65,8 +65,29 @@ function cra_render_registration_form()
                 value="<?php echo isset($_POST['cra_company_number']) ? esc_attr($_POST['cra_company_number']) : ''; ?>">
             <input type="text" name="cra_vat" placeholder="VAT Number (Optional)"
                 value="<?php echo isset($_POST['cra_vat']) ? esc_attr($_POST['cra_vat']) : ''; ?>">
-            <input type="text" name="cra_company_role" required placeholder="Role in the Company"
-                value="<?php echo isset($_POST['cra_company_role']) ? esc_attr($_POST['cra_company_role']) : ''; ?>">
+            <input type="text" name="cra_position_in_company" required placeholder="Position in the Company"
+                value="<?php echo isset($_POST['cra_position_in_company']) ? esc_attr($_POST['cra_position_in_company']) : ''; ?>">
+            <input type="text" name="cra_phone" required
+                placeholder="Phone Number (enter N/A if unknown)"
+                value="<?php echo isset($_POST['cra_phone']) ? esc_attr($_POST['cra_phone']) : ''; ?>">
+            <input type="text" name="cra_company_address" required
+                placeholder="Company Address (enter N/A if unknown)"
+                value="<?php echo isset($_POST['cra_company_address']) ? esc_attr($_POST['cra_company_address']) : ''; ?>">
+            <input type="text" name="cra_delivery_address" required
+                id="cra_delivery_address"
+                placeholder="Goods Delivery Address (enter N/A if same as company address)"
+                value="<?php echo isset($_POST['cra_delivery_address']) ? esc_attr($_POST['cra_delivery_address']) : ''; ?>">
+
+            <label style="display:block;margin-bottom:12px;">
+                <input type="checkbox" id="cra_same_address" />
+                Same as company address
+            </label>
+
+            <input type="text" name="cra_website"
+                placeholder="Website (optional)"
+                value="<?php echo isset($_POST['cra_website']) ? esc_attr($_POST['cra_website']) : ''; ?>">
+            <textarea name="cra_comments" rows="4" placeholder="Other Comments / Notes (optional)"><?php echo isset($_POST['cra_comments']) ? esc_textarea($_POST['cra_comments']) : ''; ?></textarea>
+
             <input type="email" name="cra_email" required placeholder="Email"
                 value="<?php echo isset($_POST['cra_email']) ? esc_attr($_POST['cra_email']) : ''; ?>">
             <input type="password" name="cra_password" required placeholder="Password">
@@ -80,6 +101,19 @@ function cra_render_registration_form()
                 if (usernameInput) {
                     usernameInput.addEventListener('input', function() {
                         this.value = this.value.replace(/[^A-Za-z0-9._]/g, '');
+                    });
+                }
+            });
+
+            document.addEventListener('DOMContentLoaded', function() {
+                var same = document.getElementById('cra_same_address');
+                if (same) {
+                    same.addEventListener('change', function() {
+                        var comp = document.querySelector('input[name="cra_company_address"]');
+                        var del = document.getElementById('cra_delivery_address');
+                        if (this.checked) {
+                            if (comp && del) del.value = comp.value;
+                        }
                     });
                 }
             });

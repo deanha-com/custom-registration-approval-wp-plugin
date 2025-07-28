@@ -81,7 +81,7 @@ function cra_render_multistep_registration_form()
             <input type="text" name="cra_company_number" id="cra_company_number" placeholder="Company Number" required />
             <small id="company-valid-message" style="display:none;color:green;"></small>
             <input type="text" name="cra_vat" placeholder="VAT Number (Optional)" />
-            <input type="text" name="cra_company_role" placeholder="Your Role in Company" required />
+            <input type="text" name="cra_position_in_company" placeholder="Your Position in Company" required />
             <input type="button" name="previous" class="previous action-button" value="Back" />
             <input type="button" name="next" id="cra-company-next" class="next action-button" value="Next" />
         </fieldset>

@@ -31,7 +31,7 @@ function cra_render_registration_form()
         <input type="text" name="cra_company" required placeholder="Company Name" value="<?php echo isset($_POST['cra_company']) ? esc_attr($_POST['cra_company']) : ''; ?>">
         <input type="text" name="cra_company_number" required placeholder="Company Number" value="<?php echo isset($_POST['cra_company_number']) ? esc_attr($_POST['cra_company_number']) : ''; ?>">
         <input type="text" name="cra_vat" placeholder="VAT Number (Optional)" value="<?php echo isset($_POST['cra_vat']) ? esc_attr($_POST['cra_vat']) : ''; ?>">
-        <input type="text" name="cra_company_role" required placeholder="Role in the Company" value="<?php echo isset($_POST['cra_company_role']) ? esc_attr($_POST['cra_company_role']) : ''; ?>">
+        <input type="text" name="cra_position_in_company" required placeholder="Position in the Company" value="<?php echo isset($_POST['cra_position_in_company']) ? esc_attr($_POST['cra_position_in_company']) : ''; ?>">
         <input type="email" name="cra_email" required placeholder="Email" value="<?php echo isset($_POST['cra_email']) ? esc_attr($_POST['cra_email']) : ''; ?>">
         <input type="password" name="cra_password" required placeholder="Password">
         <input type="password" name="cra_password_confirm" required placeholder="Confirm Password">
