@@ -38,7 +38,7 @@ function cra_render_registration_form()
         }
     } else {
         if (!empty($errors)) {
-            echo '<ul class="cra-errors" style="padding-left: 20px; color: #b00020;">';
+            echo '<ul class="cra-errors" style="padding-left: 20px;">';
             foreach ($errors as $err) {
                 echo '<li>' . esc_html($err) . '</li>';
             }

@@ -3,7 +3,8 @@
 Plugin Name: Custom Registration Approval
 Description: Provides a secure custom registration form with UK company number & VAT validation.
 Version: 1.1
-Author: Dean H.
+Author: Dean Ha
+Author URI: https://deanha.com
 */
 
 if (!defined('ABSPATH')) exit;
