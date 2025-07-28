@@ -26,7 +26,7 @@
 #cra-progressbar li.active::before {
     background: #2ea7e0;
     border-color: #2ea7e0;
-    color: white;
+    color: #2ea7e0;
 }
 #cra-multistep-form fieldset {
     display: none;
