@@ -158,6 +158,8 @@ function cra_render_registration_form()
             <p>
                 <label for="cra_username">Username <span style="color:red;">*</span></label>
                 <input type="text" id="cra_username" name="cra_username" required
+                    minlength="4"
+                    maxlength="30"
                     placeholder="Allowed: letters, numbers, dot (.), underscore (_) only"
                     pattern="^[A-Za-z0-9._]+$"
                     title="Username may contain only letters, numbers, dot (.), and underscore (_)."
@@ -178,10 +180,10 @@ function cra_render_registration_form()
                     value="<?php echo isset($_POST['cra_company_number']) ? esc_attr($_POST['cra_company_number']) : ''; ?>">
             </p>
 
-            <!-- VAT Number (optional) -->
+            <!-- VAT Number -->
             <p>
-                <label for="cra_vat">VAT Number (Optional)</label>
-                <input type="text" id="cra_vat" name="cra_vat" placeholder="Enter your VAT number (optional)"
+                <label for="cra_vat">VAT Number</label>
+                <input type="text" id="cra_vat" name="cra_vat" placeholder="VAT number"
                     value="<?php echo isset($_POST['cra_vat']) ? esc_attr($_POST['cra_vat']) : ''; ?>">
             </p>
 
@@ -195,21 +197,21 @@ function cra_render_registration_form()
             <!-- Phone Number -->
             <p>
                 <label for="cra_phone">Phone Number <span style="color:red;">*</span></label>
-                <input type="text" id="cra_phone" name="cra_phone" required placeholder="Enter your phone number or N/A"
+                <input type="text" id="cra_phone" name="cra_phone" required placeholder="Enter your phone number"
                     value="<?php echo isset($_POST['cra_phone']) ? esc_attr($_POST['cra_phone']) : ''; ?>">
             </p>
 
             <!-- Company Address -->
             <p>
                 <label for="cra_company_address">Company Address <span style="color:red;">*</span></label>
-                <input type="text" id="cra_company_address" name="cra_company_address" required placeholder="Enter your company address or N/A"
+                <input type="text" id="cra_company_address" name="cra_company_address" required placeholder="Enter your company address"
                     value="<?php echo isset($_POST['cra_company_address']) ? esc_attr($_POST['cra_company_address']) : ''; ?>">
             </p>
 
             <!-- Goods Delivery Address -->
             <p>
                 <label for="cra_delivery_address">Goods Delivery Address <span style="color:red;">*</span></label>
-                <input type="text" id="cra_delivery_address" name="cra_delivery_address" required placeholder="Enter goods delivery address or N/A"
+                <input type="text" id="cra_delivery_address" name="cra_delivery_address" required placeholder="Enter goods delivery address"
                     value="<?php echo isset($_POST['cra_delivery_address']) ? esc_attr($_POST['cra_delivery_address']) : ''; ?>">
             </p>
 
@@ -218,18 +220,18 @@ function cra_render_registration_form()
                 <input type="checkbox" id="cra_same_address" />
                 <span>Same as company address</span>
             </label>
-            
-            <!-- Comments / Notes (optional) -->
+
+            <!-- Comments / Notes -->
             <p class="full-width">
-                <label for="cra_comments">Other Comments / Notes (optional)</label>
+                <label for="cra_comments">Other Comments / Notes</label>
                 <textarea id="cra_comments" name="cra_comments" rows="4" placeholder="Write anything that might be useful for us"><?php echo isset($_POST['cra_comments']) ? esc_textarea($_POST['cra_comments']) : ''; ?></textarea>
             </p>
 
-            <!-- Website (optional) -->
+            <!-- Website -->
             <p>
-                <label for="cra_website">Website (optional)</label>
+                <label for="cra_website">Website</label>
                 <input type="text" id="cra_website" name="cra_website"
-                    placeholder="Enter your website (optional)"
+                    placeholder="Enter your website"
                     value="<?php echo isset($_POST['cra_website']) ? esc_attr($_POST['cra_website']) : ''; ?>">
             </p>
 

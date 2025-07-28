@@ -46,6 +46,10 @@ function cra_handle_registration_form()
     if (!preg_match('/^[A-Za-z0-9._]+$/', $username)) {
         $errors[] = "Username may only contain letters, numbers, dot (.) and underscore (_).";
     }
+    // New: Validate length between 4 and 30 characters
+    if (strlen($username) < 4 || strlen($username) > 30) {
+        $errors[] = "Username must be between 4 and 30 characters in length.";
+    }
     $email = sanitize_email($_POST['cra_email']);
 
     if (username_exists($username)) $errors[] = "Username already exists.";
