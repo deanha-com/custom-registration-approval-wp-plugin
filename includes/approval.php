@@ -181,13 +181,15 @@ function cra_send_user_notification($user_id, $status)
 function cra_send_new_registration_notification($user_id, $extra = [])
 {
     $user = get_userdata($user_id);
+    if (!$user) return;
+
     $fields = cra_get_registration_fields($user_id);
 
     // Prepare API data for admin (if passed)
     $api_section = '';
     if (!empty($extra['company_api'])) {
         $api = $extra['company_api'];
-        $api_section .= "\nAPI Verification Result:\n";
+        $api_section .= "\nCompany API Verification Result:\n";
         foreach ($api as $k => $v) {
             $api_section .= ucfirst(str_replace('_', ' ', $k)) . ': ' . $v . "\n";
         }
@@ -195,27 +197,57 @@ function cra_send_new_registration_notification($user_id, $extra = [])
             $api_section .= "Auto-approval Result: " . $extra['api_status'] . "\n";
         }
     }
+    // Add VAT API raw result for admin only
+    if (!empty($extra['vat_api']) && is_array($extra['vat_api'])) {
+        $vat = $extra['vat_api'];
+        $api_section .= "\nVAT API Verification Result:\n";
+        foreach ($vat as $k => $v) {
+            $api_section .= ucfirst(str_replace('_', ' ', $k)) . ': ' . (is_scalar($v) ? $v : json_encode($v)) . "\n";
+        }
+    }
 
     // Status line
-    $status_line = "Status: pending";
+    $status_line = "Status: " . (isset($extra['approval_status']) ? $extra['approval_status'] : 'pending');
+
     // Dynamically get the domain for noreply
-    $domain  = parse_url(home_url(), PHP_URL_HOST);
-    $from    = 'noreply@' . $domain; // noreply@yourdomain.com
+    $domain = parse_url(home_url(), PHP_URL_HOST);
+    $from = 'noreply@' . $domain;
 
     // Set From header
     $headers = array(
-        'From: ' . get_bloginfo('name') . '<' . $from . '>'
+        'From: ' . get_bloginfo('name') . ' <' . $from . '>'
     );
 
-    // 1. Send to Admin
+    // 1. Send to Admin (always)
     $admin_email = get_option('admin_email');
+    $approval_url = admin_url('users.php?page=registration-approvals');
     $subject_admin = 'New wholesale registration pending approval';
-    $message_admin = "$status_line\n\nA new user registration is pending review:\n\n$fields$api_section";
+    $message_admin = "$status_line\n\nA new user registration is pending review:\n\n$fields$api_section\n\nApprove or reject this registration here:\n$approval_url";
     wp_mail($admin_email, $subject_admin, $message_admin, $headers);
 
-    // 2. Send to User (no API data)
+    // 2. Send to User - conditional content based on approval_status
     $blogname = get_option('blogname') ?: 'Wholesale Portal';
-    $subject_user = 'Thank you for registering with ' . $blogname;
-    $message_user = "Dear {$user->display_name},\n\nThank you for your registration. Please find a copy of your submitted information below:\n\n$fields\n\nWe will review your application and notify you when your account is ready.\n\nBest regards,\n$blogname";
+
+    if (!empty($extra['approval_status']) && $extra['approval_status'] === 'approved') {
+        $login_url = wp_login_url();
+        $account_url = wc_get_account_endpoint_url('dashboard'); // WooCommerce my-account
+        $subject_user = 'Your wholesale registration is approved';
+        $message_user = "Dear {$user->display_name},\n\n".
+            "Thank you for registering. Your account has been auto-approved. You may now log in using the following links:\n\n".
+            "Login: $login_url\n".
+            "My Account: $account_url\n\n".
+            "We look forward to doing business with you.\n\n".
+            "Best regards,\n$blogname";
+    } else {
+        // Pending approval email (existing format)
+        $subject_user = 'Thank you for registering with ' . $blogname;
+        $message_user = "Dear {$user->display_name},\n\n".
+            "Thank you for your registration. Please find a copy of your submitted information below:\n\n".
+            $fields .
+            "\n\nWe will review your application and notify you when your account is activated.\n\n".
+            "Best regards,\n$blogname";
+    }
+
     wp_mail($user->user_email, $subject_user, $message_user, $headers);
 }
+

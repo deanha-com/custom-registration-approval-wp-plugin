@@ -63,8 +63,11 @@ function cra_handle_registration_form()
     // Optionally validate VAT for meta
     $vat_number = !empty($_POST['cra_vat']) ? sanitize_text_field($_POST['cra_vat']) : '';
     $vat_status = '';
+    $vat_api_data = '';
+    $vat_status = '';
     if (!empty($vat_number)) {
-        $vat_status = cra_check_vat_api($vat_number);
+        $vat_api_data = cra_check_vat_api($vat_number);
+        $vat_status = is_array($vat_api_data) && isset($vat_api_data['vat_status']) ? $vat_api_data['vat_status'] : '';
     }
 
     // If errors, return now
@@ -113,8 +116,10 @@ function cra_handle_registration_form()
     // Send registration notification (AFTER all meta is saved)
     if (function_exists('cra_send_new_registration_notification')) {
         cra_send_new_registration_notification($user_id, [
-            'company_api' => $company_api_response,
-            'api_status' => $company_valid ? 'Valid/Active ✅' : 'Invalid/Not Approved ❌',
+            'company_api'    => $company_api_response,
+            'vat_api'        => !empty($vat_api_data) ? $vat_api_data : null,
+            'api_status'     => $company_valid ? 'Valid/Active' : 'Invalid/Not Approved',
+            'approval_status' => $approval_status, // pass approval status here
         ]);
     }
 
@@ -189,6 +194,25 @@ function cra_validate_company_number_api($company_number, $user_company_name = '
 
 
 // VAT validation API check
+// function cra_check_vat_api($vat_number)
+// {
+//     $endpoint = 'https://vatapi-kohl.vercel.app/check-vat';
+//     $response = wp_remote_post($endpoint, [
+//         'headers' => ['Content-Type' => 'application/json'],
+//         'body'    => json_encode(['vat_number' => $vat_number]),
+//         'timeout' => 10,
+//     ]);
+
+//     if (is_wp_error($response) || wp_remote_retrieve_response_code($response) !== 200) {
+//         return '';
+//     }
+
+//     $body = json_decode(wp_remote_retrieve_body($response), true);
+//     return isset($body['vat_status']) ? $body['vat_status'] : '';
+// }
+
+// In validation.php
+
 function cra_check_vat_api($vat_number)
 {
     $endpoint = 'https://vatapi-kohl.vercel.app/check-vat';
@@ -203,5 +227,7 @@ function cra_check_vat_api($vat_number)
     }
 
     $body = json_decode(wp_remote_retrieve_body($response), true);
-    return isset($body['vat_status']) ? $body['vat_status'] : '';
+
+    // Save both status and raw response
+    return $body; // Instead of just $body['vat_status']
 }
