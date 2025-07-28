@@ -14,31 +14,46 @@ function cra_restricted_screen_shortcode()
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             border-radius: 10px;
             overflow: hidden;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            align-items: flex-start;
+        }
+
+        @media only screen and (max-width: 938px) {
+
+            .cra-left,
+            .cra-right {
+                width: 100% !important;
+            }
         }
 
         .cra-left,
         .cra-right {
-            width: 50%;
+            width: auto;
             padding: 40px;
             box-sizing: border-box;
         }
 
         .cra-left {
-            background: #f7f7f7;
+            background: #fff;
+            width: 40%;
             border-right: 1px solid #eee;
         }
 
         .cra-right {
-            background: #fff;
+            background: #e1e1e18c;
+            background-image: linear-gradient(307deg, #fdfbfb 0%, #e7e7e7 100%);
+            width: 60%;
+            height: -webkit-fill-available;
         }
 
         .cra-right h2 {
-            font-size: 24px;
+            font-size: 2rem;
             margin-bottom: 20px;
         }
 
         .cra-benefits {
-            margin: 20px 0;
+            margin: 2rem 0;
         }
 
         .cra-benefits li {
@@ -52,7 +67,7 @@ function cra_restricted_screen_shortcode()
             padding: 12px 24px;
             background: #2ea7e0;
             color: #fff;
-            text-decoration: none;
+            text-decoration: none !important;
             border-radius: 4px;
             font-weight: 600;
         }
@@ -68,7 +83,8 @@ function cra_restricted_screen_shortcode()
             width: -webkit-fill-available;
         }
 
-        #cra-login-form input[type=checkbox], #cra-login-form input[type=radio] {
+        #cra-login-form input[type=checkbox],
+        #cra-login-form input[type=radio] {
             width: auto;
         }
     </style>

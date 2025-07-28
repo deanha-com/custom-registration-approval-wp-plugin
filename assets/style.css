@@ -1,6 +1,7 @@
 #cra-register-form {
-  max-width: 70%;
+  /* max-width: 70%; */
   /* margin: 2em auto; */
+  column-count: 2;
 }
 #cra-register-form input,
 #cra-register-form button {
@@ -11,8 +12,9 @@
 }
 .cra-errors {
   color: #fff;
-  background: #b30000;
+  background: #d7403a;
   padding: 1em;
+  margin: 0;
   margin-bottom: 1em;
   border-radius: 3px;
   list-style: disc inside;
@@ -22,8 +24,12 @@
   min-width: 20%;
   max-width: 140px;
   margin-left: auto;
-  background: #eda63d;
-  color: white;
+  /* background: #eda63d;
+  color: white; */
+}
+
+#cra-register-form textarea {
+  margin-bottom: 1em;
 }
 
 /* Spinner example */
@@ -52,8 +58,8 @@ button[disabled] .spinner {
   }
 }
 
-
-button[disabled], html input[disabled] {
+button[disabled],
+html input[disabled] {
   color: silver;
   /* color: gold !important; */
 }

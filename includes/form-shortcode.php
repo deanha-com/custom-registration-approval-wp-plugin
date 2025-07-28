@@ -77,9 +77,12 @@ function cra_render_registration_form()
                 placeholder="Goods Delivery Address (enter N/A if same as company address)"
                 value="<?php echo isset($_POST['cra_delivery_address']) ? esc_attr($_POST['cra_delivery_address']) : ''; ?>">
 
-            <label style="display:block;margin-bottom:12px;">
-                <input type="checkbox" id="cra_same_address" />
-                Same as company address
+            <label style="display:flex;margin-bottom:12px;">
+                <input type="checkbox" id="cra_same_address" style="width:20px !important;margin-bottom: 0em !important; margin-right: 10px; break-after: column;"/>
+                <span>
+                    Same as company address
+
+                </span>
             </label>
 
             <input type="text" name="cra_website"

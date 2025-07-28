@@ -7,60 +7,79 @@ add_action('edit_user_profile', 'cra_custom_user_profile_fields');
 function cra_custom_user_profile_fields($user)
 {
 ?>
-    <h2>Wholesale Company Information</h2>
-    <table class="form-table">
-        <tr>
-            <th><label for="company_name">Company Name</label></th>
-            <td>
-                <input type="text" name="company_name" id="company_name" value="<?php echo esc_attr(get_user_meta($user->ID, 'company_name', true)); ?>" class="regular-text" />
-            </td>
-        </tr>
-        <tr>
-            <th><label for="company_number">Company Number</label></th>
-            <td>
-                <input type="text" name="company_number" id="company_number" value="<?php echo esc_attr(get_user_meta($user->ID, 'company_number', true)); ?>" class="regular-text" />
-            </td>
-        </tr>
-        <tr>
-            <th><label for="vat_number">VAT Number</label></th>
-            <td>
-                <input type="text" name="vat_number" id="vat_number" value="<?php echo esc_attr(get_user_meta($user->ID, 'vat_number', true)); ?>" class="regular-text" />
-            </td>
-        </tr>
-        <tr>
-            <th><label for="position_in_company">Position in Company</label></th>
-            <td>
-                <input type="text" name="position_in_company" id="position_in_company" value="<?php echo esc_attr(get_user_meta($user->ID, 'position_in_company', true)); ?>" class="regular-text" />
-            </td>
-        </tr>
-        <tr>
-            <th><label for="phone">Phone</label></th>
-            <td>
-                <input type="text" name="phone" id="phone" value="<?php echo esc_attr(get_user_meta($user->ID, 'phone', true)); ?>" class="regular-text" />
-            </td>
-        </tr>
+    <style>
+        #cra_company_info {
+            width: fit-content;
+            background: #ececec;
+            padding: 0.5rem 1rem;
+            border-radius: 13px;
+            border: 2px dashed #6c6c6c;
+            background-image: linear-gradient(to top, #d5d4d0 0%, #d5d4d0 1%, #eeeeec 31%, #efeeec 75%, #e9e9e7 100%);
+        }
+    </style>
+    <div id="cra_company_info">
+        <h2>Wholesale Company Information</h2>
+        <table class="form-table">
+            <tr>
+                <th><label for="company_name">Company Name</label></th>
+                <td>
+                    <input type="text" name="company_name" id="company_name" value="<?php echo esc_attr(get_user_meta($user->ID, 'company_name', true)); ?>" class="regular-text" />
+                </td>
+            </tr>
+            <tr>
+                <th><label for="company_number">Company Number</label></th>
+                <td>
+                    <input type="text" name="company_number" id="company_number" value="<?php echo esc_attr(get_user_meta($user->ID, 'company_number', true)); ?>" class="regular-text" />
+                </td>
+            </tr>
+            <tr>
+                <th><label for="vat_number">VAT Number</label></th>
+                <td>
+                    <input type="text" name="vat_number" id="vat_number" value="<?php echo esc_attr(get_user_meta($user->ID, 'vat_number', true)); ?>" class="regular-text" />
+                </td>
+            </tr>
+            <tr>
+                <th><label for="position_in_company">Position in Company</label></th>
+                <td>
+                    <input type="text" name="position_in_company" id="position_in_company" value="<?php echo esc_attr(get_user_meta($user->ID, 'position_in_company', true)); ?>" class="regular-text" />
+                </td>
+            </tr>
+            <tr>
+                <th><label for="phone">Phone</label></th>
+                <td>
+                    <input type="text" name="phone" id="phone" value="<?php echo esc_attr(get_user_meta($user->ID, 'phone', true)); ?>" class="regular-text" />
+                </td>
+            </tr>
 
-        <tr>
-            <th><label for="company_address">Company Address</label></th>
-            <td>
-                <input type="text" name="company_address" id="company_address" value="<?php echo esc_attr(get_user_meta($user->ID, 'company_address', true)); ?>" class="regular-text" />
-            </td>
-        </tr>
+            <tr>
+                <th><label for="company_address">Company Address</label></th>
+                <td>
+                    <input type="text" name="company_address" id="company_address" value="<?php echo esc_attr(get_user_meta($user->ID, 'company_address', true)); ?>" class="regular-text" />
+                </td>
+            </tr>
 
-        <tr>
-            <th><label for="delivery_address">Delivery Address</label></th>
-            <td>
-                <input type="text" name="delivery_address" id="delivery_address" value="<?php echo esc_attr(get_user_meta($user->ID, 'delivery_address', true)); ?>" class="regular-text" />
-            </td>
-        </tr>
+            <tr>
+                <th><label for="delivery_address">Delivery Address</label></th>
+                <td>
+                    <input type="text" name="delivery_address" id="delivery_address" value="<?php echo esc_attr(get_user_meta($user->ID, 'delivery_address', true)); ?>" class="regular-text" />
+                </td>
+            </tr>
 
-        <tr>
-            <th><label for="website">Website</label></th>
-            <td>
-                <input type="text" name="website" id="website" value="<?php echo esc_attr(get_user_meta($user->ID, 'website', true)); ?>" class="regular-text" />
-            </td>
-        </tr>
-    </table>
+            <tr>
+                <th><label for="website">Website</label></th>
+                <td>
+                    <input type="text" name="website" id="website" value="<?php echo esc_attr(get_user_meta($user->ID, 'website', true)); ?>" class="regular-text" />
+                </td>
+            </tr>
+
+            <tr>
+                <th><label for="comments">Comments</label></th>
+                <td>
+                    <textarea style="width: 100%; max-width: 350px;" rows="5" name="comments" id="comments" value="<?php echo esc_attr(get_user_meta($user->ID, 'comments', true)); ?>" class="regular-text"><?php echo esc_attr(get_user_meta($user->ID, 'comments', true)); ?></textarea>
+                </td>
+            </tr>
+        </table>
+    </div>
 <?php
 }
 
@@ -74,6 +93,11 @@ function cra_save_custom_user_profile_fields($user_id)
     update_user_meta($user_id, 'company_number', sanitize_text_field($_POST['company_number']));
     update_user_meta($user_id, 'vat_number', sanitize_text_field($_POST['vat_number']));
     update_user_meta($user_id, 'position_in_company', sanitize_text_field($_POST['position_in_company']));
+    update_user_meta($user_id, 'phone', sanitize_text_field($_POST['phone']));
+    update_user_meta($user_id, 'company_address', sanitize_text_field($_POST['company_address']));
+    update_user_meta($user_id, 'delivery_address', sanitize_text_field($_POST['delivery_address']));
+    update_user_meta($user_id, 'website', sanitize_text_field($_POST['website']));
+    update_user_meta($user_id, 'comments', sanitize_text_field($_POST['comments']));
 }
 ?>
 
@@ -170,12 +194,11 @@ add_action('woocommerce_account_company-details_endpoint', function () {
                         <input style="width: 100%;" type="text" name="cra_website" value="<?php echo $website; ?>" />
                     </label>
                 </p>
-                <!-- <p>
+                <p>
                     <label>Comments/Notes<br>
-                        <textarea style="width: 100%;" name="cra_comments"><?php //echo $comments; 
-                                                                            ?></textarea>
+                        <textarea style="width: 100%;" rows="5" name="cra_comments"><?php echo $comments; ?></textarea>
                     </label>
-                </p> -->
+                </p>
             </div>
             <p>
                 <button type="submit" class="button" name="cra_company_details_submit" value="1">Save Changes</button>

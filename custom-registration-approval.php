@@ -1,8 +1,8 @@
 <?php
 /*
 Plugin Name: Custom Registration Approval
-Description: Provides a secure custom registration form with company number validation.
-Version: 1.0
+Description: Provides a secure custom registration form with UK company number & VAT validation.
+Version: 1.1
 Author: Dean H.
 */
 
