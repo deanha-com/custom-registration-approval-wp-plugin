@@ -78,6 +78,18 @@ function cra_custom_user_profile_fields($user)
                     <textarea style="width: 100%; max-width: 350px;" rows="5" name="comments" id="comments" value="<?php echo esc_attr(get_user_meta($user->ID, 'comments', true)); ?>" class="regular-text"><?php echo esc_attr(get_user_meta($user->ID, 'comments', true)); ?></textarea>
                 </td>
             </tr>
+            <tr>
+                <th><label for="is_on_credit">Wholesale Credit Account</label></th>
+                <td>
+                    <input type="checkbox" name="is_on_credit"
+                        id="is_on_credit"
+                        value="yes"
+                        <?php checked(get_user_meta($user->ID, 'isOnCredit', true), 'yes'); ?> />
+                    <label for="is_on_credit">Enable "Pay on Account" for this user</label>
+                    <p class="description">If checked, this user will see the "Pay on Account" payment option at checkout.</p>
+                </td>
+            </tr>
+
         </table>
     </div>
 <?php
@@ -98,6 +110,11 @@ function cra_save_custom_user_profile_fields($user_id)
     update_user_meta($user_id, 'delivery_address', sanitize_text_field($_POST['delivery_address']));
     update_user_meta($user_id, 'website', sanitize_text_field($_POST['website']));
     update_user_meta($user_id, 'comments', sanitize_text_field($_POST['comments']));
+    if (isset($_POST['is_on_credit']) && $_POST['is_on_credit'] === 'yes') {
+        update_user_meta($user_id, 'isOnCredit', 'yes');
+    } else {
+        update_user_meta($user_id, 'isOnCredit', 'no');
+    }
 }
 ?>
 

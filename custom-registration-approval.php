@@ -2,7 +2,7 @@
 /*
 Plugin Name: Custom Registration Approval
 Description: Provides a secure custom registration form with UK company number & VAT validation.
-Version: 1.1
+Version: 1.3
 Author: Dean Ha
 Author URI: https://deanha.com
 */
@@ -19,6 +19,7 @@ require_once plugin_dir_path(__FILE__) . 'includes/form-multistep.php';
 require_once plugin_dir_path(__FILE__) . 'includes/ajax-company-validator.php';
 require_once plugin_dir_path(__FILE__) . 'includes/restricted-screen.php';
 require_once plugin_dir_path(__FILE__) . 'includes/user-meta-profile.php';
+require_once plugin_dir_path(__FILE__) . 'includes/gateway-checkpayment-filter.php';
 
 
 // (Optional) Load styles
